@@ -1,7 +1,9 @@
-// Manuel Alejandro Grisales Pescador
 start: program;
 
-program  : expression;
+program  : functiondef* expression;
+
+functiondef:  DEF ID LPAR (ID (',' ID)*)*  RPAR LCBR expression RCBR;
+
 
 @expression:
 	  parexpression
@@ -9,8 +11,6 @@ program  : expression;
     | boolexpression
 	| conditional
     | switchexpression
-	| listexpression
-	| functiondef
 	| number 
 	| variable
 	;
@@ -26,8 +26,6 @@ variable:
 
 logicalexpression:
 	expression (LT | GT | LEQ | GEQ | EQ | NEQ) expression
-	| expression (OR | AND | NAND | NOR | XOR | XNOR) expression
-	| NOT expression
 	| TRUE
 	| FALSE
 	;
@@ -41,12 +39,6 @@ boolexpression:
 switchexpression:
     SWITCH expression (CASE expression THEN expression)+ DEFAULT expression
 	;
-
-
-listexpression:
-	LPAR LIST (expression (',' expression)*)* RPAR;
-
-functiondef:  DEF ID LPAR (expression (',' expression)*)* RPAR LCBR expression RCBR;
 
 /**
  * Lexer rules
@@ -74,8 +66,6 @@ GEQ :  '>=';
 EQ  :  '==';
 NEQ  : '!=';
 
-
-
 LPAR : '\(';
 RPAR : '\)';
 LCBR : '{';
@@ -94,14 +84,6 @@ ID: '[a-z]+'
         SWITCH : 'switch';	
         CASE : 'case';	
 		DEFAULT : 'default';	
-		LIST : 'list';	
-		OR  : 'or';
-		AND  : 'and';
-		NAND  : 'nand';
-		NOR  : 'nor';
-		XOR  : 'xor';
-		XNOR  : 'xnor';
-		NOT  : 'not';	
 	);
 
 // Ignore white space, tab and new lines.
